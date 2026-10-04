@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antisensi - Sensi FF</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#090909;
+  color:#fff;
+  min-height:100vh;
+}
+
+header{
+  padding:22px 18px;
+  background:#111;
+  border-bottom:1px solid #292929;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.logo{
+  font-size:27px;
+  font-weight:900;
+  color:#ff6a00;
+}
+
+.subtitle{
+  color:#aaa;
+  font-size:13px;
+  margin-top:4px;
+}
+
+.container{
+  width:100%;
+  max-width:650px;
+  margin:auto;
+  padding:18px;
+  padding-bottom:100px;
+}
+
+.card{
+  background:#131313;
+  border:1px solid #292929;
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:15px;
+}
+
+h2{
+  font-size:18px;
+  margin-bottom:15px;
+}
+
+label{
+  display:block;
+  color:#bbb;
+  font-size:13px;
+  margin:14px 0 7px;
+}
+
+input,
+select{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:1px solid #333;
+  background:#1c1c1c;
+  color:white;
+  outline:none;
+}
+
+input:focus,
+select:focus{
+  border-color:#ff6a00;
+}
+
+button{
+  width:100%;
+  border:0;
+  padding:14px;
+  border-radius:11px;
+  background:#ff6a00;
+  color:#fff;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:15px;
+}
+
+button:active{
+  transform:scale(.98);
+}
+
+.secondary{
+  background:#242424;
+}
+
+.result{
+  display:none;
+}
+
+.sensi-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.sensi{
+  background:#1c1c1c;
+  border:1px solid #303030;
+  border-radius:13px;
+  padding:15px;
+}
+
+.sensi span{
+  display:block;
+  color:#aaa;
+  font-size:12px;
+}
+
+.sensi strong{
+  display:block;
+  color:#ff6a00;
+  font-size:30px;
+  margin-top:5px;
+}
+
+.dpi{
+  margin-top:14px;
+  padding:15px;
+  background:#1c1c1c;
+  border-radius:12px;
+}
+
+.dpi strong{
+  color:#ff6a00;
+}
+
+.mode-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.mode-buttons button{
+  margin:0;
+}
+
+.active{
+  background:#ff6a00 !important;
+}
+
+.slider-box{
+  margin-top:15px;
+}
+
+.slider-box input{
+  padding:0;
+  accent-color:#ff6a00;
+}
+
+.value{
+  color:#ff6a00;
+  font-weight:bold;
+}
+
+.hud{
+  position:relative;
+  height:270px;
+  background:
+    linear-gradient(#ffffff08 1px,transparent 1px),
+    linear-gradient(90deg,#ffffff08 1px,transparent 1px);
+  background-size:30px 30px;
+  background-color:#18301d;
+  border:2px solid #333;
+  border-radius:15px;
+  margin-top:15px;
+  overflow:hidden;
+}
+
+.hud-btn{
+  position:absolute;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  border-radius:50%;
+  background:#ff6a00aa;
+  border:2px solid #fff;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.fire{
+  width:65px;
+  height:65px;
+  right:35px;
+  bottom:40px;
+}
+
+.scope{
+  width:52px;
+  height:52px;
+  right:110px;
+  bottom:55px;
+}
+
+.crouch{
+  width:42px;
+  height:42px;
+  right:105px;
+  bottom:15px;
+}
+
+.jump{
+  width:45px;
+  height:45px;
+  right:50px;
+  bottom:105px;
+}
+
+.reload{
+  width:38px;
+  height:38px;
+  right:155px;
+  bottom:25px;
+}
+
+.profile{
+  padding:13px;
+  background:#1b1b1b;
+  border-radius:11px;
+  margin-top:10px;
+}
+
+.profile b{
+  color:#ff6a00;
+}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#101010;
+  border-top:1px solid #292929;
+  display:flex;
+  justify-content:space-around;
+  padding:10px;
+  z-index:20;
+}
+
+.bottom button{
+  background:none;
+  margin:0;
+  padding:8px;
+  color:#aaa;
+  font-size:12px;
+}
+
+.bottom button.active{
+  color:#ff6a00;
+}
+
+.section{
+  display:none;
+}
+
+.section.active-section{
+  display:block;
+}
+
+.notice{
+  background:#24170e;
+  border:1px solid #63340f;
+  padding:12px;
+  border-radius:10px;
+  color:#ffb27d;
+  font-size:12px;
+  margin-bottom:15px;
+}
+
+@media(max-width:420px){
+  .sensi strong{
+    font-size:25px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">ANTISENSI</div>
+  <div class="subtitle">Gerador de sensibilidade para Free Fire</div>
+</header>
+
+<main class="container">
+
+<!-- GERAR -->
+<section id="gerar" class="section active-section">
+
+<div class="notice">
+A sensibilidade é calculada de acordo com o seu celular e estilo de jogo.
+</div>
+
+<div class="card">
+
+<h2>Seu dispositivo</h2>
+
+<label>Marca e modelo</label>
+<select id="celular">
+<option value="hot40i">Infinix Hot 40i</option>
+<option value="a15">Samsung Galaxy A15</option>
+<option value="redmi13">Redmi Note 13</option>
+<option value="pocox6">POCO X6</option>
+<option value="spark20">TECNO Spark 20</option>
+<option value="a50c">itel A50c</option>
+</select>
+
+<label>RAM</label>
+<select id="ram">
+<option value="4">4 GB</option>
+<option value="6" selected>6 GB</option>
+<option value="8">8 GB</option>
+<option value="12">12 GB</option>
+</select>
+
+<label>Taxa da tela</label>
+<select id="hz">
+<option value="60">60 Hz</option>
+<option value="90" selected>90 Hz</option>
+<option value="120">120 Hz</option>
+<option value="144">144 Hz</option>
+</select>
+
+<label>Você joga com quantos dedos?</label>
+<select id="dedos">
+<option value="2">2 dedos</option>
+<option value="3">3 dedos</option>
+<option value="4">4 dedos</option>
+</select>
+
+<label>Estilo de jogo</label>
+<select id="estilo">
+<option value="rush">Rusher</option>
+<option value="capa">Capa</option>
+<option value="equilibrado">Equilibrado</option>
+<option value="longa">Longa distância</option>
+</select>
+
+<label>Nível de experiência</label>
+<select id="experiencia">
+<option value="iniciante">Iniciante</option>
+<option value="medio" selected>Intermediário</option>
+<option value="pro">Avançado</option>
+</select>
+
+<button onclick="gerarSensi()">GERAR MINHA SENSI</button>
+
+</div>
+
+<div id="resultado" class="result">
+
+<div class="card">
+
+<h2>Sua sensibilidade</h2>
+
+<div class="sensi-grid">
+
+<div class="sensi">
+<span>Geral</span>
+<strong id="geral">0</strong>
+</div>
+
+<div class="sensi">
+<span>Ponto Vermelho</span>
+<strong id="red">0</strong>
+</div>
+
+<div class="sensi">
+<span>Mira 2x</span>
+<strong id="x2">0</strong>
+</div>
+
+<div class="sensi">
+<span>Mira 4x</span>
+<strong id="x4">0</strong>
+</div>
+
+<div class="sensi">
+<span>AWM</span>
+<strong id="awm">0</strong>
+</div>
+
+<div class="sensi">
+<span>Olhadinha</span>
+<strong id="olhar">0</strong>
+</div>
+
+</div>
+
+<div class="dpi">
+DPI sugerida: <strong id="dpi">400</strong>
+</div>
+
+<button onclick="salvar()">SALVAR PERFIL</button>
+<button class="secondary" onclick="ajustar(-5)">MIRA MAIS LENTA</button>
+<button class="secondary" onclick="ajustar(5)">MIRA MAIS RÁPIDA</button>
+
+</div>
+
+<div class="card">
+
+<h2>HUD</h2>
+
+<div class="hud">
+
+<div class="hud-btn fire">ATIRAR</div>
+<div class="hud-btn scope">MIRA</div>
+<div class="hud-btn crouch">AGACHAR</div>
+<div class="hud-btn jump">PULAR</div>
+<div class="hud-btn reload">REC</div>
+
+</div>
+
+<label>Tamanho do botão de atirar:
+<span class="value" id="fireValue">65%</span>
+</label>
+
+<input
+type="range"
+min="25"
+max="100"
+value="65"
+oninput="mudarFire(this.value)"
+>
+
+<label>Tamanho da mira:
+<span class="value" id="scopeValue">52%</span>
+</label>
+
+<input
+type="range"
+min="25"
+max="100"
+value="52"
+oninput="mudarScope(this.value)"
+>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- PERFIS -->
+
+<section id="perfis" class="section">
+
+<div class="card">
+
+<h2>Meus perfis</h2>
+
+<div id="listaPerfis">
+Nenhum perfil salvo.
+</div>
+
+</div>
+
+</section>
+
+
+<!-- TREINO -->
+
+<section id="treino" class="section">
+
+<div class="card">
+
+<h2>Treino de mira</h2>
+
+<p style="color:#aaa;font-size:13px">
+Treine sua mira e descubra se a sensibilidade está rápida ou lenta.
+</p>
+
+<button onclick="iniciarTreino()">INICIAR TESTE — 30s</button>
+
+<div id="treinoArea" style="display:none;margin-top:20px;text-align:center">
+
+<div id="tempo"
+style="font-size:40px;color:#ff6a00;font-weight:bold">
+30
+</div>
+
+<div id="resultadoTreino"
+style="margin-top:15px;color:#aaa">
+Aponte para os alvos no Free Fire.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- DICAS -->
+
+<section id="dicas" class="section">
+
+<div class="card">
+
+<h2>Dicas para melhorar a mira</h2>
+
+<p style="color:#bbb;line-height:1.7">
+• Use uma sensibilidade confortável.<br>
+• Não altere a sensibilidade várias vezes por dia.<br>
+• Teste primeiro no modo treinamento.<br>
+• Ajuste o botão de tiro de acordo com sua pegada.<br>
+• Evite economizador de bateria durante partidas.<br>
+• Feche aplicativos desnecessários antes de jogar.
+</p>
+
+</div>
+
+</section>
+
+</main>
+
+
+<nav class="bottom">
+
+<button class="active" onclick="abrir('gerar',this)">
+GERAR
+</button>
+
+<button onclick="abrir('perfis',this)">
+PERFIS
+</button>
+
+<button onclick="abrir('treino',this)">
+TREINO
+</button>
+
+<button onclick="abrir('dicas',this)">
+DICAS
+</button>
+
+</nav>
+
+
+<script>
+
+let sensi={
+geral:0,
+red:0,
+x2:0,
+x4:0,
+awm:0,
+olhar:0,
+dpi:400
+};
+
+const fatores={
+hot40i:1.03,
+a15:1.00,
+redmi13:1.02,
+pocox6:1.04,
+spark20:1.01,
+a50c:.98
+};
+
+
+function limitar(valor){
+return Math.max(0,Math.min(200,Math.round(valor)));
+}
+
+
+function gerarSensi(){
+
+let celular=document.getElementById("celular").value;
+let hz=Number(document.getElementById("hz").value);
+let dedos=Number(document.getElementById("dedos").value);
+let estilo=document.getElementById("estilo").value;
+let experiencia=document.getElementById("experiencia").value;
+
+let base=150;
+
+if(hz>=120) base+=8;
+else if(hz>=90) base+=4;
+
+if(dedos===3) base+=4;
+if(dedos===4) base+=7;
+
+if(experiencia==="iniciante") base-=8;
+if(experiencia==="pro") base+=5;
+
+if(estilo==="rush") base+=10;
+if(estilo==="capa") base+=6;
+if(estilo==="longa") base-=10;
+
+base*=fatores[celular];
+
+sensi.geral=limitar(base);
+sensi.red=limitar(base-5);
+sensi.x2=limitar(base-15);
+sensi.x4=limitar(base-30);
+sensi.awm=limitar(base-45);
+sensi.olhar=limitar(base-10);
+
+sensi.dpi=
+celular==="a50c" ? 380 :
+celular==="pocox6" ? 450 :
+celular==="redmi13" ? 420 :
+400;
+
+mostrar();
+
+document.getElementById("resultado").style.display="block";
+
+window.scrollTo({
+top:document.getElementById("resultado").offsetTop,
+behavior:"smooth"
+});
+
+}
+
+
+function mostrar(){
+
+document.getElementById("geral").innerText=sensi.geral;
+document.getElementById("red").innerText=sensi.red;
+document.getElementById("x2").innerText=sensi.x2;
+document.getElementById("x4").innerText=sensi.x4;
+document.getElementById("awm").innerText=sensi.awm;
+document.getElementById("olhar").innerText=sensi.olhar;
+document.getElementById("dpi").innerText=sensi.dpi;
+}
+
+
+function ajustar(valor){
+
+sensi.geral=limitar(sensi.geral+valor);
+sensi.red=limitar(sensi.red+valor);
+sensi.x2=limitar(sensi.x2+valor);
+sensi.x4=limitar(sensi.x4+valor);
+sensi.awm=limitar(sensi.awm+valor);
+sensi.olhar=limitar(sensi.olhar+valor);
+
+mostrar();
+}
+
+
+function mudarFire(valor){
+
+document.querySelector(".fire").style.width=valor+"px";
+document.querySelector(".fire").style.height=valor+"px";
+
+document.getElementById("fireValue").innerText=valor+"%";
+}
+
+
+function mudarScope(valor){
+
+document.querySelector(".scope").style.width=valor+"px";
+document.querySelector(".scope").style.height=valor+"px";
+
+document.getElementById("scopeValue").innerText=valor+"%";
+}
+
+
+function salvar(){
+
+if(sensi.geral===0){
+alert("Primeiro gere uma sensibilidade.");
+return;
+}
+
+let nome=prompt("Nome do perfil:");
+
+if(!nome)return;
+
+let perfis=
+JSON.parse(localStorage.getItem("antisensi_perfis")||"[]");
+
+perfis.push({
+nome:nome,
+data:new Date().toLocaleDateString(),
+sensi:{...sensi}
+});
+
+localStorage.setItem(
+"antisensi_perfis",
+JSON.stringify(perfis)
+);
+
+mostrarPerfis();
+
+alert("Perfil salvo!");
+}
+
+
+function mostrarPerfis(){
+
+let perfis=
+JSON.parse(localStorage.getItem("antisensi_perfis")||"[]");
+
+let area=document.getElementById("listaPerfis");
+
+if(!perfis.length){
+area.innerText="Nenhum perfil salvo.";
+return;
+}
+
+area.innerHTML="";
+
+perfis.forEach((p,i)=>{
+
+let div=document.createElement("div");
+
+div.className="profile";
+
+div.innerHTML=`
+<b>${p.nome}</b><br>
+Geral: ${p.sensi.geral} |
+Red: ${p.sensi.red} |
+2x: ${p.sensi.x2}<br>
+Data: ${p.data}
+<br>
+<button onclick="carregar(${i})">
+CARREGAR
+</button>
+<button class="secondary"
+onclick="apagar(${i})">
+APAGAR
+</button>
+`;
+
+area.appendChild(div);
+
+});
+
+}
+
+
+function carregar(i){
+
+let perfis=
+JSON.parse(localStorage.getItem("antisensi_perfis")||"[]");
+
+sensi={...perfis[i].sensi};
+
+mostrar();
+
+document.getElementById("resultado").style.display="block";
+
+abrir("gerar",
+document.querySelector(".bottom button"));
+
+}
+
+
+function apagar(i){
+
+let perfis=
+JSON.parse(localStorage.getItem("antisensi_perfis")||"[]");
+
+perfis.splice(i,1);
+
+localStorage.setItem(
+"antisensi_perfis",
+JSON.stringify(perfis)
+);
+
+mostrarPerfis();
+
+}
+
+
+function abrir(id,botao){
+
+document.querySelectorAll(".section")
+.forEach(x=>x.classList.remove("active-section"));
+
+document.getElementById(id)
+.classList.add("active-section");
+
+document.querySelectorAll(".bottom button")
+.forEach(x=>x.classList.remove("active"));
+
+botao.classList.add("active");
+
+if(id==="perfis"){
+mostrarPerfis();
+}
+
+}
+
+
+let timer;
+
+function iniciarTreino(){
+
+let area=document.getElementById("treinoArea");
+
+area.style.display="block";
+
+let tempo=30;
+
+document.getElementById("tempo")
+.innerText=tempo;
+
+clearInterval(timer);
+
+timer=setInterval(()=>{
+
+tempo--;
+
+document.getElementById("tempo")
+.innerText=tempo;
+
+if(tempo<=0){
+
+clearInterval(timer);
+
+document.getElementById("resultadoTreino")
+.innerText=
+"Teste terminado. Se a mira passou do alvo, reduza 5 pontos. Se ficou lenta, aumente 5 pontos.";
+
+}
+
+},1000);
+
+}
+
+
+mostrarPerfis();
+
+</script>
+
+</body>
+</html>
